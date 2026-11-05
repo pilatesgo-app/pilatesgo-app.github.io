@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PilatesGo davet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --zemin:#0E1022; --yuzey:#1A1D33; --vurgu:#8BB12F; --metin:#F2F2F7; --soluk:#A0A3BD; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:var(--zemin); color:var(--metin);
+         font-family:Outfit,system-ui,sans-serif; display:flex; justify-content:center; padding:32px 16px; }
+  main { width:100%; max-width:420px; }
+  h1 { font-size:26px; font-weight:800; margin:0 0 8px; }
+  p { color:var(--soluk); line-height:1.5; margin:0 0 16px; }
+  .marka { font-weight:800; font-size:18px; color:var(--vurgu); margin-bottom:24px; }
+  .kart { background:var(--yuzey); border-radius:24px; padding:24px; margin:20px 0; text-align:center; }
+  .etiket { color:var(--soluk); font-size:14px; font-weight:600; }
+  .kod { font-size:34px; font-weight:800; letter-spacing:5px; color:var(--vurgu); margin:6px 0 14px; word-break:break-all; }
+  .buton { display:block; width:100%; border:0; border-radius:16px; padding:15px; margin:10px 0 0;
+           font:700 16px Outfit,system-ui,sans-serif; text-decoration:none; text-align:center; cursor:pointer; }
+  .ana { background:var(--vurgu); color:var(--zemin); }
+  .ikincil { background:transparent; color:var(--metin); border:1.5px solid #3A3E5C; }
+  ol { color:var(--soluk); padding-left:20px; line-height:1.7; margin:0; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="marka">PilatesGo</div>
+  <h1 id="baslik"></h1>
+  <p id="aciklama"></p>
+
+  <div class="kart" id="kodKarti" hidden>
+    <div class="etiket" id="kodEtiket"></div>
+    <div class="kod" id="kod"></div>
+    <button class="buton ikincil" id="kopyala" type="button"></button>
+    <a class="buton ana" id="ac" href="#"></a>
+  </div>
+
+  <a class="buton ana" id="play" href="https://play.google.com/store/apps/details?id=com.gencs.pilatesgo"></a>
+
+  <div class="kart" style="text-align:left">
+    <ol id="adimlar"></ol>
+  </div>
+</main>
+
+<script>
+  (function () {
+    var tr = (navigator.language || "en").toLowerCase().indexOf("tr") === 0;
+    document.documentElement.lang = tr ? "tr" : "en";
+
+    var M = tr ? {
+      baslik: "PilatesGo'ya davet edildin",
+      aciklama: "Eğitmenin programını, diyetini ve ilerlemeni PilatesGo'dan takip etmen için seni davet etti.",
+      eksik: "Bu bağlantıda davet kodu yok. Kodu eğitmeninden isteyebilirsin.",
+      kodEtiket: "Davet kodun",
+      kopyala: "Kodu kopyala",
+      kopyalandi: "Kopyalandı ✓",
+      ac: "Uygulamada aç",
+      play: "Google Play'den indir",
+      adimlar: ["PilatesGo'yu Google Play'den indir.",
+                "Hesap oluştur ve “Öğrenciyim”i seç.",
+                "Bu bağlantıya tekrar dokun; kodun kendiliğinden girilir. İstersen kodu elle de girebilirsin."]
+    } : {
+      baslik: "You're invited to PilatesGo",
+      aciklama: "Your trainer invited you to follow your program, diet plan and progress in PilatesGo.",
+      eksik: "This link has no invite code. Ask your trainer for your code.",
+      kodEtiket: "Your invite code",
+      kopyala: "Copy code",
+      kopyalandi: "Copied ✓",
+      ac: "Open in the app",
+      play: "Get it on Google Play",
+      adimlar: ["Download PilatesGo from Google Play.",
+                "Create an account and choose “I'm a student”.",
+                "Tap this link again and your code is filled in. You can also enter it manually."]
+    };
+
+    function $(id) { return document.getElementById(id); }
+
+    var playAdres = "https://play.google.com/store/apps/details?id=com.gencs.pilatesgo";
+    var k = (new URLSearchParams(location.search).get("k") || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    var gecerli = /^[A-Z0-9]{6}$/.test(k);
+
+    $("baslik").textContent = M.baslik;
+    $("aciklama").textContent = gecerli ? M.aciklama : M.eksik;
+    $("play").textContent = M.play;
+    M.adimlar.forEach(function (a) { var li = document.createElement("li"); li.textContent = a; $("adimlar").appendChild(li); });
+
+    if (gecerli) {
+      var gorunen = "PG-" + k;
+      $("kodKarti").hidden = false;
+      $("kodEtiket").textContent = M.kodEtiket;
+      $("kod").textContent = gorunen;
+      $("kopyala").textContent = M.kopyala;
+      $("ac").textContent = M.ac;
+      $("ac").href = "intent://davet?k=" + k + "#Intent;scheme=pilatesgo;package=com.gencs.pilatesgo;S.browser_fallback_url="
+                     + encodeURIComponent(playAdres) + ";end";
+
+      $("kopyala").addEventListener("click", function () {
+        function tamam() { $("kopyala").textContent = M.kopyalandi; setTimeout(function () { $("kopyala").textContent = M.kopyala; }, 2000); }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(gorunen).then(tamam, function () {});
+        } else {
+          var t = document.createElement("textarea"); t.value = gorunen; document.body.appendChild(t);
+          t.select(); try { document.execCommand("copy"); tamam(); } catch (e) {} document.body.removeChild(t);
+        }
+      });
+    }
+  })();
+</script>
+</body>
+</html>
