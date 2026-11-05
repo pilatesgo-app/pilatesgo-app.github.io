@@ -1,0 +1,15 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.gencs.pilatesgo",
+      "sha256_cert_fingerprints": [
+        "72:76:C3:CE:98:FF:0E:9A:99:2C:BC:96:06:28:B9:BF:C1:C5:8D:D1:EC:C1:E7:C3:F5:9F:E8:53:C8:5A:17:71",
+        "19:AE:15:89:FD:4D:0D:F3:2E:B7:74:AB:3B:E9:A7:63:C0:BB:72:42:01:4D:08:0E:5D:24:1F:A7:A8:17:12:55",
+        "44:96:FF:EF:83:3B:BF:C3:EB:AA:78:61:91:EA:74:5C:2E:CD:44:4F:5D:AB:F1:E3:22:82:27:35:9A:FD:D5:35",
+        "73:30:F1:BB:6C:81:00:07:83:72:5A:36:1B:C6:C9:35:DC:CA:CC:DB:94:BB:8F:25:4E:18:29:FE:FF:7C:F4:60"
+      ]
+    }
+  }
+]
